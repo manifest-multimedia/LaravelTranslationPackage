@@ -22,7 +22,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^7.4|^8.0",
-        "illuminate/support": "^8.0"
+        "illuminate/support": "^7.0 || ^9.0"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",
@@ -49,8 +49,8 @@
     "extra": 
         {
 
-        "version":"1.0.0",
-                    
+        "version":"1.0.0.0",
+
         "laravel": {
             "providers": [
                 "Manifesthq\\Translation\\TranslationServiceProvider"
