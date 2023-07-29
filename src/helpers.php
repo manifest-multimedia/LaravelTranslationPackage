@@ -11,7 +11,7 @@ if(!function_exists('translate')){
  */
 function translate($text){
     
-    $domain="manifestghana.com";
+    $domain=config('translation.domain');
 
     //   Only translate if the current locale is not the default locale
 

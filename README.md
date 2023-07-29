@@ -71,6 +71,7 @@ If you discover any security related issues, please email support@manifestghana.
 
 -   [Johnson Sebire](https://github.com/manifesthq)
 -   [All Contributors](../../contributors)
+-   [Google Translate](https://translate.google.com)
 -   [BeyondCode Laravel Package Boilerplate](https://laravelpackageboilerplate.com).
 
 ## License
