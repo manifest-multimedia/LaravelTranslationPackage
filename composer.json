@@ -3,7 +3,10 @@
     "description": "Translate your app into 113+ Languages with Human Translation Capabilities!",
     "keywords": [
         "manifesthq",
-        "translation"
+        "translation",
+        "Manifest Multimedia", 
+        "Team Manifest", 
+        "teammanifest"
     ],
     "homepage": "https://github.com/manifesthq/translation",
     "license": "MIT",
@@ -16,7 +19,7 @@
         }
     ],
 
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "php": "^7.4|^8.0",
         "illuminate/support": "^8.0"
@@ -43,7 +46,11 @@
     "config": {
         "sort-packages": true
     },
-    "extra": {
+    "extra": 
+        {
+
+        "version":"1.0.0",
+                    
         "laravel": {
             "providers": [
                 "Manifesthq\\Translation\\TranslationServiceProvider"
