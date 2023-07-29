@@ -83,4 +83,3 @@ If you discover any security related issues, please email support@manifestghana.
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
- the 
