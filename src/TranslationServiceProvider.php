@@ -36,7 +36,7 @@ class TranslationServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../config/config.php' => config_path('translation.php'),
-            ], 'config');
+            ], 'translation-config');
 
             // Publishing the views.
             /*$this->publishes([

@@ -28,6 +28,12 @@ You can install the package via composer:
 composer require manifesthq/translation
 ```
 
+Publish Configuration using:
+
+```bash
+php artisan vendor:publish --tag=translation-config
+```
+
 ## Usage
 
 Our package is designed to be user-friendly, requiring minimal configurations to get started. Here's a quick guide on how to use the Laravel Multi-Language Translation Package:

@@ -5,7 +5,7 @@
  */
 return [
 
-    'domain'=>"manifestghana.com",
+    'domain'=>"yourdomain.com",
     'default_locale' => 'en',
     'target_locale' => 'fr', 
 ];
