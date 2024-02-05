@@ -11,6 +11,7 @@ class TranslationServiceProvider extends ServiceProvider
   
     /**
      * Bootstrap the application services.
+     * Updated Package Version to v1.0.0.2
      */
     public function boot(Router $router)
     {
