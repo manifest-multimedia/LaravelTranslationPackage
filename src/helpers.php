@@ -1,5 +1,9 @@
 <?php 
 
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
+
 if(!function_exists('translate')){
 
    
@@ -10,82 +14,98 @@ if(!function_exists('translate')){
  * @return string The translated text, or "Translation not available" if the translation is not available.
  */
 function translate($text){
-    
+
+    $source='';
+    $target='';
+
+    // Obtain Config Values
     $domain=config('translation.domain');
+    $targetLocale=config('translation.default_locale');
+    $defaultLocale=config('translation.default_locale');
+    $fallbackLocale=config('app.fallback_locale');
 
-    //   Only translate if the current locale is not the default locale
+    // Obtain Defaults
+    $appLocale=App::getLocale();
+    $sessionLocale='';
 
-    if(session()->has('locale')){
-        Log::info("Translating from " .  config('translation.default_locale') . " to " . session('locale'));
+    if(Session::has('locale')){
+
+        $sessionLocale=Session::get('locale');
         
-        $from_language=config('translation.default_locale');
-        $to_language=session('locale');
+    }else{
+        Session::put('locale',$defaultLocale);
+        $sessionLocale=$defaultLocale;
+    }
+
+    if($appLocale!=$defaultLocale){
+        $source=$appLocale;
+    }else{
+        $source=$defaultLocale;
+    }
+
+    if($sessionLocale!=$source){
+        
+        $target=$sessionLocale;
+
+        Log::info("Attempting to translate form $source to $target");
+
+        try {
+            //Handle Translation
+
+            $url = "https://manifestghana.com/api/v1/translation/translate";
+            
+            $curl = curl_init($url);
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            
+            $headers = array(
+            "Content-Type: application/json",
+            );
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+            
+            $req = [
+            "translationText"=>$text,
+            "sourceLanguage"=>$from_language,
+            "targetLanguage"=>$to_language,
+            "projectDomain"=>$domain
+            ];
+
+            $data=json_encode($req);
+
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+            
+            //for debug only!
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            
+            $resp = json_decode(curl_exec($curl));
+            curl_close($curl);
+
+            $response=htmlspecialchars_decode($resp->translated_text);
+        
+           
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            
+            Log::critical('Translation Failed '.$th);
+
+            return $text;
+        }
+            Log::info('Translation Successful');
+
+        return $response;
 
     }else{
-        Session()->put('locale',config('translation.default_locale'));
-        $from_language = config('translation.target_locale');
-        $to_language=session('locale');
-    }
-       
- 
-        if($from_language!=$to_language)
-        
-        {
-            // dd('Not Equal '. session('locale'). ' and ' . config('translation.default_locale'));
-            // dd($from_language . ' to Language ' . $to_language);
 
-            try {
-                //Handle Translation
+        Log::info("No Translation occured since $source and $target are the same.");
 
-                $url = "https://manifestghana.com/api/v1/translation/translate";
-                
-                $curl = curl_init($url);
-                curl_setopt($curl, CURLOPT_URL, $url);
-                curl_setopt($curl, CURLOPT_POST, true);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                
-                $headers = array(
-                "Content-Type: application/json",
-                );
-                curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-                
-                $req = [
-                "translationText"=>$text,
-                "sourceLanguage"=>$from_language,
-                "targetLanguage"=>$to_language,
-                "projectDomain"=>$domain
-                ];
-
-                $data=json_encode($req);
-
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-                
-                //for debug only!
-                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-                
-                $resp = json_decode(curl_exec($curl));
-                curl_close($curl);
-
-                $response=htmlspecialchars_decode($resp->translated_text);
-            
-               
-
-            } catch (\Throwable $th) {
-                //throw $th;
-                
-                Log::critical('Translation Failed '.$th);
-
-                return $text;
-            }
-
-            return $response;
-
-    } else{
-
-    return $text;
+        return $text;
 
     }
+
+    
 
     
 }

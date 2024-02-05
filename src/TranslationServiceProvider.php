@@ -14,14 +14,9 @@ class TranslationServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        // $router->aliasMiddleware('Translation', HandleTranslation::class);
-        
+      
         //Globally Register Middleware
         $router->pushMiddlewareToGroup('web', HandleTranslation::class);
-
-        // dd($router);
-        
-        // $router->middleware('HandleTranslation', HandleTranslation::class); 
 
         /*
          * Optional methods to load your package assets
@@ -76,6 +71,5 @@ class TranslationServiceProvider extends ServiceProvider
 
         require_once __DIR__.'/helpers.php';
 
-        // app('router')->
     }
 }

@@ -3,10 +3,12 @@
 namespace Manifesthq\Translation;
 
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 
 class Translation
 {
-    // Build your next great package.
+
    
         /**
          * Translates a text from one language to another using the specified API.
@@ -15,8 +17,28 @@ class Translation
          * @return string The translated text, or "Translation not available" if the translation is not available.
          */
         public function translate($text){
-            
+
+            $source='';
+            $target='';
+
+            // Obtain Config Values
             $domain="manifestghana.com";
+            $targetLocale=config('translation.default_locale');
+            $defaultLocale=config('translation.default_locale');
+            $fallbackLocale=config('app.fallback_locale');
+
+            // Obtain Defaults
+            $appLocale=App::getLocale();
+            $sessionLocale='';
+
+            if(Session::has('locale')){
+
+                $sessionLocale=Session::get('locale');
+                
+            }else{
+                Session::put('locale',$defaultLocale);
+                $sessionLocale=$defaultLocale;
+            }
     
             //   Only translate if the current locale is not the default locale
            
