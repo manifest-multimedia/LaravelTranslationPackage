@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
+// Use Log 
+use Illuminate\Support\Facades\Log;
 
 
 class HandleTranslation
@@ -21,15 +23,30 @@ class HandleTranslation
      */
     public function handle(Request $request, Closure $next): Response
     {
-
         if (Session::has('locale')) {
-            App::setLocale(Session::get('locale'));
-        }else {
-            App::setLocale(config('translation.default_locale'));
-            Session::put('locale',config('translation.default_locale'));
+            $sessionLocale = Session::get('locale');
+            Log::info('Current Session Locale is ' . $sessionLocale);
+
+            $appLocale = App::getLocale();
+            Log::info('App Locale is ' . $appLocale);
+
+            if ($sessionLocale != $appLocale) {
+                App::setLocale($sessionLocale);
+            }
+        } else {
+            $appLocale = App::getLocale();
+            Log::info('App Locale is ' . $appLocale);
+
+            $defaultLocale = config('translation.default_locale');
+            Log::info('Current Config Locale is ' . $defaultLocale);
+
+            // Compare $appLocale and $defaultLocale
+            if ($appLocale != $defaultLocale) {
+                App::setLocale($defaultLocale);
+                Session::put('locale', $defaultLocale);
+            }
         }
 
         return $next($request);
-
     }
 }
