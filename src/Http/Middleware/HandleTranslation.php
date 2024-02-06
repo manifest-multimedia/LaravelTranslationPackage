@@ -24,33 +24,19 @@ class HandleTranslation
     public function handle(Request $request, Closure $next): Response
     {
 
-        if ($request->is('language/*')) {
-            return $next($request);
+        $locale=$request->route('locale');
+
+        if ($locale) {
+            App::setLocale($locale);
+            Session::put('locale', $locale);
+            Log::info('Locale updated to ' . $locale);
+        }else{
+
+            App::setLocale(config('translation.default_locale'));
+            Session::put('locale', config('translation.default_locale'));
+            Log::info('Locale set to defaults ' . config('translation.default_locale'));
         }
-
-        if (Session::has('locale')) {
-            $sessionLocale = Session::get('locale');
-            Log::info('Current Session Locale is ' . $sessionLocale);
-
-            $appLocale = App::getLocale();
-            Log::info('App Locale is ' . $appLocale);
-
-            if ($sessionLocale != $appLocale) {
-                App::setLocale($sessionLocale);
-            }
-        } else {
-            $appLocale = App::getLocale();
-            Log::info('App Locale is ' . $appLocale);
-
-            $defaultLocale = config('translation.default_locale');
-            Log::info('Current Config Locale is ' . $defaultLocale);
-
-            // Compare $appLocale and $defaultLocale
-            if ($appLocale != $defaultLocale) {
-                App::setLocale($defaultLocale);
-                Session::put('locale', $defaultLocale);
-            }
-        }
+        
 
         return $next($request);
     }
