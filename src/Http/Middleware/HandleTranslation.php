@@ -23,6 +23,11 @@ class HandleTranslation
      */
     public function handle(Request $request, Closure $next): Response
     {
+
+        if ($request->is('language/*')) {
+            return $next($request);
+        }
+
         if (Session::has('locale')) {
             $sessionLocale = Session::get('locale');
             Log::info('Current Session Locale is ' . $sessionLocale);
