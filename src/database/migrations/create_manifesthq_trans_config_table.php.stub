@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('manifesthq_trans_config', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('default_locale')->nullable();
+            $table->string('source_locales')->nullable();
+            $table->string('target_locale')->nullable();
+            $table->string('supported_locales')->nullable();
+            $table->string('default_domain')->nullable();
+            $table->string('license_key')->nullable();
+            $table->string('license_status')->nullable();
+            $table->string('status')->nullable()->default('active');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('manifesthq_trans_config');
+    }
+};

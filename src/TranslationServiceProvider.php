@@ -30,9 +30,20 @@ class TranslationServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/routes/web.php');
 
         if ($this->app->runningInConsole()) {
+
+            // Publish Configuration File
+
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('translation.php'),
+                __DIR__.'/config/config.php' => config_path('translation.php'),
             ], 'translation-config');
+
+
+            // Publish Migrations
+            $this->publishes([
+
+                __DIR__.'/database/migrations/create_manifesthq_trans_config_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_manifesthq_trans_config_table.php'), 
+
+            ], 'migrations');
 
             // Publishing the views.
             /*$this->publishes([
